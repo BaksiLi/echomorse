@@ -97,9 +97,9 @@ echomorse c2a "TEST" -o - | ffplay -i - -nodisp -autoexit
 
 **List available voices:**
 ```bash
-echomorse list-voices
+echomorse voices
 # Show detailed information about each voice:
-echomorse list-voices --detailed
+echomorse voices --detailed
 ```
 
 ### Piping Examples
@@ -152,28 +152,30 @@ The voice system allows for customizable audio outputs beyond simple tones. Each
 
 Echo-Morse comes with two built-in voices:
 - **CW (built-in)**: Default sine wave tones for standard Morse code
-- **dog_bark**: Dog bark sounds for Morse code (automatically installed on first run)
+- **dog_bark**: Dog bark sounds for Morse code (automatically installed on first use)
 
 To see all available voices:
 ```bash
-echomorse list-voices
+echomorse voices
 ```
 
 To install or manage voice packs:
 ```bash
-# Install all built-in voices (if they weren't auto-installed)
-echomorse voice-utils install-builtin
+# Install all built-in voices to your user directory
+echomorse voices --install all
 
-# View voice directory locations
-echomorse voice-utils dirs
+# Install a specific built-in voice
+echomorse voices --install dog_bark
+
+# View detailed voice information and directory locations
+echomorse voices --list
 ```
 
 ### Custom Voice Packs
 
 Voices are stored in one of these locations:
 1. The OS-specific user data directory (e.g., `~/.local/share/echomorse/audio` on Linux)
-2. `~/.echomorse/audio/` directory
-3. The package's built-in audio directory (for pre-installed voices)
+2. The package's built-in audio directory (for pre-installed voices)
 
 Each voice directory must contain:
 1. A `voice_config.json` configuration file

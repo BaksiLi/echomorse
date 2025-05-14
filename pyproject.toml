@@ -1,6 +1,6 @@
 [project]
 name = "echomorse"
-version = "0.8.2"
+version = "0.8.3"
 description = "A Python tool to translate text to Morse code audio using various voices."
 authors = [
     {name = "Baksi Li", email = "myself@baksili.codes"},
@@ -46,7 +46,7 @@ build-backend = "pdm.backend"
 distribution = true
 
 [tool.pdm.build]
-includes = ["src", "audio"]
+includes = ["src"]
 package-dir = "src"
 
 [tool.pdm.dev-dependencies]
@@ -73,12 +73,13 @@ t2c = {cmd = "python -m echomorse text2code"}
 c2t = {cmd = "python -m echomorse code2text"}
 t2a = {cmd = "python -m echomorse text2audio"}
 c2a = {cmd = "python -m echomorse code2audio"}
-list-voices = {cmd = "python -m echomorse list-voices"}
+voices = {cmd = "python -m echomorse voices"}
 
 # Legacy aliases for backward compatibility
 text-to-morse = {cmd = "python -m echomorse text2code"}
 morse-to-text = {cmd = "python -m echomorse code2text"}
 text-to-morse-audio = {cmd = "python -m echomorse text2audio"}
+list-voices = {cmd = "python -m echomorse voices"}
 
 # Test and development scripts
 test = {cmd = "pytest"}

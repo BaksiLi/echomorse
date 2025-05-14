@@ -1,6 +1,6 @@
 """Echo-Morse: A Python tool for converting text to audible Morse code using various voices."""
 
-__version__ = "0.8.0"
+__version__ = "0.8.3"
 
 from .translator import translator
 from .synthesizer import generate_morse_audio

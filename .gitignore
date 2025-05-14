@@ -35,6 +35,9 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# Ignore PDM lock file for libraries
+pdm.lock
+
 # Environments
 .env
 .venv
@@ -62,5 +65,4 @@ Thumbs.db
 
 # Project specific
 output_morse.wav
-audio/output/
-audio/temp/ 
+audio/

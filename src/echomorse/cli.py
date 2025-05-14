@@ -138,7 +138,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
     t2a_parser.add_argument(
         "--voice",
-        help="Voice profile to use (use 'list-voices' to see available options)",
+        help="Voice profile to use (use 'voices --list' to see available options)",
     )
     t2a_parser.add_argument(
         "--wpm", type=int, default=20, help="Speed in words per minute (default: 20)"
@@ -185,7 +185,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
     c2a_parser.add_argument(
         "--voice",
-        help="Voice profile to use (use 'list-voices' to see available options)",
+        help="Voice profile to use (use 'voices --list' to see available options)",
     )
     c2a_parser.add_argument(
         "--wpm", type=int, default=20, help="Speed in words per minute (default: 20)"
@@ -224,27 +224,21 @@ def create_parser() -> argparse.ArgumentParser:
     a2t_parser.add_argument("audio_file", help="Audio file containing Morse code")
     a2t_parser.add_argument("-o", "--output", help="Output file (defaults to stdout)")
 
-    # === LIST VOICES ===
-    voices_parser = subparsers.add_parser(
-        "list-voices", help="List available voice profiles"
-    )
-    voices_parser.add_argument(
-        "--detailed",
-        action="store_true",
-        help="Show detailed information about each voice",
-    )
-
     # === VOICE UTILITIES ===
     voice_utils_parser = subparsers.add_parser(
         "voice-utils", aliases=["voices"], help="Voice utilities and management"
     )
     voice_utils_parser.add_argument(
         "--install", metavar="VOICE_NAME",
-        help="Install a built-in voice to user directory (default is all)"
+        help="Install a built-in voice to user directory (use value 'all' for all voices)"
     )
     voice_utils_parser.add_argument(
         "--list", action="store_true",
         help="List available voice packs and their locations"
+    )
+    voice_utils_parser.add_argument(
+        "--detailed", action="store_true",
+        help="Show detailed information about each voice"
     )
 
     return parser
@@ -436,55 +430,12 @@ def handle_audio2text(args: argparse.Namespace) -> int:
     return 1
 
 
-def handle_list_voices(args: argparse.Namespace) -> int:
-    """Handle listing available voices."""
-    all_voices = list_available_voices()
-
-    if not all_voices:
-        logger.warning("No voices found.")
-        logger.info(
-            "To add a custom voice, create a subdirectory in 'audio/' (e.g., 'audio/my_voice/'),"
-        )
-        logger.info("add your .wav files, and a 'voice_config.json' pointing to them.")
-        return 1
-
-    # Sort voices (ensure CW is first)
-    sorted_voices = sorted(all_voices, key=lambda v: (v != "CW (built-in)", v))
-
-    # Output voice list
-    print("Available voice profiles:")
-    for voice_name in sorted_voices:
-        voice_info = get_voice_info(voice_name)
-
-        if args.detailed:
-            # Detailed output format
-            print(f"\n  {voice_name}")
-            print(f"  {'=' * len(voice_name)}")
-            print(f"  Description: {voice_info['description'] or 'No description'}")
-            print(f"  Audio files: {voice_info['audio_count']}")
-            print(f"  Has patterns: {'Yes' if voice_info['has_patterns'] else 'No'}")
-        else:
-            # Simple format
-            description = voice_info["description"]
-            desc_str = f": {description}" if description else ""
-            pattern_info = " (patterns)" if voice_info["has_patterns"] else ""
-            files_info = (
-                f"{voice_info['audio_count']} files"
-                if voice_info["audio_count"] > 0
-                else "built-in"
-            )
-
-            print(f"  - {voice_name}{desc_str} ({files_info}{pattern_info})")
-
-    return 0
-
-
 def handle_voice_utils(args: argparse.Namespace) -> int:
     """Handle voice utility commands."""
     from .utils import voice_manager
     
-    # Default behavior is to show basic voice info
-    if not args.install and not args.list:
+    # Default behavior is to show basic voice info (same as old list-voices)
+    if not args.install and not args.list and not args.detailed:
         print("Available voices:")
         for voice in voice_manager.list_available_voices():
             info = voice_manager.get_voice_info(voice)
@@ -493,7 +444,7 @@ def handle_voice_utils(args: argparse.Namespace) -> int:
         return 0
     
     # List detailed voice information
-    if args.list:
+    if args.list or args.detailed:
         print("Voice directories:")
         for i, dir_path in enumerate([voice_manager.USER_AUDIO_DIR, voice_manager.PACKAGE_AUDIO_DIR], 1):
             exists = "✓" if os.path.isdir(dir_path) else "✗"
@@ -502,39 +453,58 @@ def handle_voice_utils(args: argparse.Namespace) -> int:
         print("\nDetailed voice information:")
         for voice in voice_manager.list_available_voices():
             info = voice_manager.get_voice_info(voice)
-            print(f"\n  {voice}")
-            print(f"  {'=' * len(voice)}")
-            print(f"  Description: {info['description'] or 'None'}")
-            print(f"  Location: {info['location'] or 'Unknown'}")
-            print(f"  Audio files: {info['audio_count']}")
-            print(f"  Has patterns: {'Yes' if info['has_patterns'] else 'No'}")
+            
+            if args.detailed:
+                # Detailed output format
+                print(f"\n  {voice}")
+                print(f"  {'=' * len(voice)}")
+                print(f"  Description: {info['description'] or 'No description'}")
+                print(f"  Location: {info['location'] or 'Unknown'}")
+                print(f"  Audio files: {info['audio_count']}")
+                print(f"  Has patterns: {'Yes' if info['has_patterns'] else 'No'}")
+            else:
+                # Simple format with location info
+                description = info["description"]
+                desc_str = f": {description}" if description else ""
+                pattern_info = " (patterns)" if info["has_patterns"] else ""
+                files_info = (
+                    f"{info['audio_count']} files"
+                    if info['audio_count'] > 0
+                    else "built-in"
+                )
+                location = f" [{info['location']}]" if info['location'] else ""
+                
+                print(f"  - {voice}{desc_str} ({files_info}{pattern_info}){location}")
         return 0
     
     # Install voice(s)
     if args.install:
-        # Install a specific voice
-        voice_name = args.install
-        success = voice_manager.install_voice(voice_name)
-        if success:
-            print(f"Successfully installed voice '{voice_name}'")
-            return 0
+        if args.install.lower() == "all":
+            # Install all available voices
+            success_count = 0
+            for voice in voice_manager.list_available_voices():
+                if voice != "CW (built-in)" and voice_manager.install_voice(voice):
+                    success_count += 1
+                    print(f"Installed voice: {voice}")
+            
+            if success_count > 0:
+                print(f"Successfully installed {success_count} voice(s)")
+                return 0
+            else:
+                print("No voices were installed")
+                return 0
         else:
-            print(f"Failed to install voice '{voice_name}'")
-            return 1
-    else:
-        # Install all available voices
-        success_count = 0
-        for voice in voice_manager.list_available_voices():
-            if voice != "CW (built-in)" and voice_manager.install_voice(voice):
-                success_count += 1
-                print(f"Installed voice: {voice}")
-        
-        if success_count > 0:
-            print(f"Successfully installed {success_count} voice(s)")
-            return 0
-        else:
-            print("No voices were installed")
-            return 0
+            # Install a specific voice
+            voice_name = args.install
+            success = voice_manager.install_voice(voice_name)
+            if success:
+                print(f"Successfully installed voice '{voice_name}'")
+                return 0
+            else:
+                print(f"Failed to install voice '{voice_name}'")
+                return 1
+    
+    return 0
 
 
 def run_cli() -> int:
@@ -560,7 +530,6 @@ def run_cli() -> int:
         "c2a": handle_code2audio,
         "audio2text": handle_audio2text,
         "a2t": handle_audio2text,
-        "list-voices": handle_list_voices,
         "voice-utils": handle_voice_utils,
         "voices": handle_voice_utils,
     }
