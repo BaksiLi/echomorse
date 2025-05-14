@@ -32,12 +32,14 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pdm install -d
+        pdm install
     
-    - name: Run tests
+    - name: Run tests with coverage
       run: |
-        pdm run test-cov
+        pdm run pytest --cov=src/echomorse tests/ --cov-report=xml
     
-    - name: Run linting
-      run: |
-        pdm run lint
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false

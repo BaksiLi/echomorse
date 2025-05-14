@@ -2,7 +2,8 @@
 
 > a.k.a. 摩斯電狗 (Morse the E-Dog)
 
-[![CI](https://github.com/baksili/echo-morse/actions/workflows/ci.yml/badge.svg)](https://github.com/baksili/echo-morse/actions/workflows/ci.yml)
+[![CI](https://github.com/BaksiLi/echomorse/actions/workflows/ci.yml/badge.svg)](https://github.com/BaksiLi/echomorseactions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/baksili/echo-morse/branch/main/graph/badge.svg)](https://codecov.io/gh/BaksiLi/echomorse)
 [![PyPI version](https://badge.fury.io/py/echomorse.svg)](https://badge.fury.io/py/echomorse)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
