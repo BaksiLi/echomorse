@@ -30,9 +30,9 @@ classifiers = [
 keywords = ["morse", "morse code", "audio", "ham radio", "cw", "text-to-audio"]
 
 [project.urls]
-Homepage = "https://github.com/baksili/echo-morse"
-Issues = "https://github.com/baksili/echo-morse/issues"
-Documentation = "https://github.com/baksili/echo-morse#readme"
+Homepage = "https://github.com/BaksiLi/echomorse"
+Issues = "https://github.com/BaksiLi/echomorse/issues"
+Documentation = "https://github.com/BaksiLi/echomorse#readme"
 
 [project.scripts]
 echomorse = "echomorse.cli:main"
