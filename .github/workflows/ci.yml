@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install PDM
+      run: |
+        python -m pip install --upgrade pip
+        pip install pdm
+    
+    - name: Configure PDM
+      run: |
+        pdm config python.use_venv false
+    
+    - name: Install dependencies
+      run: |
+        pdm install -d
+    
+    - name: Run tests
+      run: |
+        pdm run test-cov
+    
+    - name: Run linting
+      run: |
+        pdm run lint

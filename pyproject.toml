@@ -1,0 +1,110 @@
+[project]
+name = "echomorse"
+version = "0.8.0"
+description = "A Python tool to translate text to Morse code audio using various voices."
+authors = [
+    {name = "Baksi Li", email = "myself@baksili.codes"},
+]
+dependencies = [
+    "numpy>=2.2.5",
+    "pydub>=0.25.1",
+]
+requires-python = ">=3.10, <3.13"
+readme = "README.md"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Communications :: Ham Radio",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Utilities",
+]
+keywords = ["morse", "morse code", "audio", "ham radio", "cw", "text-to-audio"]
+
+[project.urls]
+Homepage = "https://github.com/baksili/echo-morse"
+Issues = "https://github.com/baksili/echo-morse/issues"
+Documentation = "https://github.com/baksili/echo-morse#readme"
+
+[project.scripts]
+echomorse = "echomorse.cli:main"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+includes = ["src", "audio"]
+package-dir = "src"
+
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+]
+lint = [
+    "ruff>=0.5.0",
+    "black>=23.11.0",
+    "mypy>=1.7.0",
+]
+docs = [
+    "mkdocs>=1.5.3",
+    "mkdocs-material>=9.4.12",
+]
+
+[tool.pdm.scripts]
+# Main script
+echomorse = {cmd = "python -m echomorse"}
+
+# Convenience shortcuts for common operations
+t2c = {cmd = "python -m echomorse text2code"}
+c2t = {cmd = "python -m echomorse code2text"}
+t2a = {cmd = "python -m echomorse text2audio"}
+c2a = {cmd = "python -m echomorse code2audio"}
+list-voices = {cmd = "python -m echomorse list-voices"}
+
+# Legacy aliases for backward compatibility
+text-to-morse = {cmd = "python -m echomorse text2code"}
+morse-to-text = {cmd = "python -m echomorse code2text"}
+text-to-morse-audio = {cmd = "python -m echomorse text2audio"}
+
+# Test and development scripts
+test = {cmd = "pytest"}
+test-cov = {cmd = "pytest --cov=src/echomorse tests/"}
+lint = {cmd = "ruff check src/ tests/"}
+format = {cmd = "black src/ tests/"}
+typecheck = {cmd = "mypy src/"}
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+filterwarnings = [
+    "ignore::DeprecationWarning:pydub.utils"
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
