@@ -1,6 +1,6 @@
 [project]
 name = "echomorse"
-version = "0.8.0"
+version = "0.8.2"
 description = "A Python tool to translate text to Morse code audio using various voices."
 authors = [
     {name = "Baksi Li", email = "myself@baksili.codes"},
@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "numpy>=2.2.5",
     "pydub>=0.25.1",
+    "appdirs>=1.4.4",
 ]
 requires-python = ">=3.10, <3.13"
 readme = "README.md"

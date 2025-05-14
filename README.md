@@ -30,6 +30,8 @@ pip install echomorse
 
 This will install the package and make the `echomorse` command available in your environment.
 
+Make sure you have `ffmpeg` installed.
+
 ### From Source
 
 1.  **Clone the repository:**
@@ -146,35 +148,36 @@ echomorse t2a "CQ DE BY1QH" --voice dog_bark --pattern-chance 0.5 -o cq_dog_less
 
 The voice system allows for customizable audio outputs beyond simple tones. Each voice is a collection of audio files and configuration settings.
 
-Voices are stored in the `audio` directory with each voice in its own subdirectory (e.g., `audio/my_custom_voice/`).
+### Built-in Voices
+
+Echo-Morse comes with two built-in voices:
+- **CW (built-in)**: Default sine wave tones for standard Morse code
+- **dog_bark**: Dog bark sounds for Morse code (automatically installed on first run)
+
+To see all available voices:
+```bash
+echomorse list-voices
+```
+
+To install or manage voice packs:
+```bash
+# Install all built-in voices (if they weren't auto-installed)
+echomorse voice-utils install-builtin
+
+# View voice directory locations
+echomorse voice-utils dirs
+```
+
+### Custom Voice Packs
+
+Voices are stored in one of these locations:
+1. The OS-specific user data directory (e.g., `~/.local/share/echomorse/audio` on Linux)
+2. `~/.echomorse/audio/` directory
+3. The package's built-in audio directory (for pre-installed voices)
 
 Each voice directory must contain:
-
-1.  A `voice_config.json` configuration file.
-2.  Audio files (e.g., `.wav`) referenced in the configuration.
-
-### Voice Configuration (`voice_config.json`)
-
-Defines:
-- Basic voice metadata (name, description).
-- Audio files for Morse elements (e.g., `dot`, `dash`).
-- Optional `sequence_patterns` for mapping specific Morse sequences (like `... --- ...`) to custom audio files (e.g., a single recording of "SOS").
-
-Example:
-```json
-{
-  "name": "my_voice",
-  "description": "My custom voice for Morse code",
-  "elements": {
-    "dot": "dot_sound.wav",
-    "dash": "dash_sound.wav",
-    "custom_sos_sound": "sos_recording.wav" // A full recording for SOS
-  },
-  "sequence_patterns": {
-    "custom_sos_sound": "... --- ..." // Maps the Morse for SOS to the element key "custom_sos_sound"
-  }
-}
-```
+1. A `voice_config.json` configuration file
+2. Audio files (e.g., `.wav`) referenced in the configuration
 
 ## License
 
