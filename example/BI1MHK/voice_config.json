@@ -1,0 +1,9 @@
+{
+  "name": "BI1MHK",
+  "description": "",
+  
+  "elements": {
+    "dot": "dot.wav",
+    "dash": "dash.wav"
+  }
+}

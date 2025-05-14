@@ -1,0 +1,26 @@
+name: Release to PyPI
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      # Required for trusted publishing
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install PDM
+        run: pip install pdm
+      
+      - name: Build and publish
+        run: pdm publish 

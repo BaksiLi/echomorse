@@ -1,0 +1,9 @@
+{
+  "name": "caixukun",
+  "description": "",
+  
+  "elements": {
+    "dot": "nigan.wav",
+    "dash": "maa.wav"
+  }
+}

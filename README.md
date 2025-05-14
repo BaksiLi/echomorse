@@ -1,11 +1,11 @@
 # Echo-Morse
 
-> a.k.a. 摩斯電狗 (Morse the E-Dog)
 
-[![CI](https://github.com/BaksiLi/echomorse/actions/workflows/ci.yml/badge.svg)](https://github.com/BaksiLi/echomorseactions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/baksili/echo-morse/branch/main/graph/badge.svg)](https://codecov.io/gh/BaksiLi/echomorse)
+[![CI](https://github.com/BaksiLi/echomorse/actions/workflows/ci.yml/badge.svg)](https://github.com/BaksiLi/echomorse/actions/workflows/ci.yml)
 [![PyPI version](https://badge.fury.io/py/echomorse.svg)](https://badge.fury.io/py/echomorse)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> a.k.a. 摩斯電狗 (Morse the E-Dog)
 
 A versatile tool for converting text to Morse code (CW) with customizable audio synthesis, designed for HAM radio operators and enthusiasts.
 
